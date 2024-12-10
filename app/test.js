@@ -7,12 +7,14 @@ export default function IndexPage() {
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
+    // Request permissions
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permission required', 'We need your permission to access your camera roll.');
       return;
     }
 
+    // Launch the image picker
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -20,45 +22,27 @@ export default function IndexPage() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(result.assets[0].uri); // Update with the selected image URI
     }
   };
 
   const takePhoto = async () => {
+    // Request permissions
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permission required', 'We need your permission to use the camera.');
       return;
     }
 
+    // Launch the camera
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       quality: 1,
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(result.assets[0].uri); // Update with the captured photo URI
     }
-  };
-
-  const savePhoto = async () => {
-    if (image) {
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status === 'granted') {
-        try {
-          await MediaLibrary.createAssetAsync(image);
-          Alert.alert('Photo Saved', 'Your photo has been saved to the gallery.');
-        } catch (error) {
-          Alert.alert('Error', 'Failed to save the photo.');
-        }
-      } else {
-        Alert.alert('Permission required', 'We need your permission to save the photo.');
-      }
-    }
-  };
-
-  const discardPhoto = () => {
-    setImage(null); // Clear the current photo
   };
 
   return (
@@ -66,8 +50,7 @@ export default function IndexPage() {
       {image ? (
         <>
           <Image source={{ uri: image }} style={styles.preview} />
-          <Button title="Save Photo" onPress={savePhoto} />
-          <Button title="Discard Photo" onPress={discardPhoto} />
+          <Button title="Save Photo" onPress={() => Alert.alert('Save functionality')} />
         </>
       ) : (
         <>
