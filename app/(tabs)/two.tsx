@@ -1,31 +1,33 @@
-import { StyleSheet } from 'react-native';
+import userDatabase from '../../components/SQLiteConnection';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+const testDatabase = async () => {
+  await userDatabase.initializeDatabase();
 
-export default function TabTwoScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-    </View>
+  // Insert a new user
+  await userDatabase.insertUser(
+    'Alice',
+    'Wonderland',
+    '789 Maple Rd',
+    '555-1234',
+    'alice@example.com'
   );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
+  // Fetch all users
+  const users = await userDatabase.fetchUsers();
+  console.log(users);
+{/*  
+  // Update a user
+  await userDatabase.updateUser(
+    users[0].id,
+    'John',
+    'Doe',
+    'Updated Address',
+    'Updated Phone',
+    'updated.email@example.com'
+  );
+  */}
+  // Delete a user
+  //await userDatabase.deleteUser(users[1].id);
+};
+
+testDatabase();
